@@ -39,7 +39,7 @@ class FeedPostSerializer(serializers.ModelSerializer):
             'created_at',
         )
 
-class PostDetailSerializer(serializers.ModelSerializer):
+class PostCommentSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True, read_only=True)
     class Meta:
         model = Post

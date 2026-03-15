@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import generics
-from .serializers import FeedPostSerializer, PostDetailSerializer,  CommentSerializer
+from .serializers import FeedPostSerializer, PostCommentSerializer,  CommentSerializer
 from core.models import Post, Comment
 
 @api_view(['GET'])
@@ -18,5 +18,5 @@ def comment_list(request):
 
 class PostDetailAPIView(generics.RetrieveAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostDetailSerializer
+    serializer_class = PostCommentSerializer
     # lookup_url_kwarg = 'id'
