@@ -13,27 +13,29 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class FeedPostSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True, read_only=True)
-    id = serializers.PrimaryKeyRelatedField(read_only=True)
+    post_id = serializers.UUIDField(read_only=True)
     total_comments = serializers.SerializerMethodField()
     total_likes = serializers.SerializerMethodField()
+    is_liked = serializers.SerializerMethodField()
 
-    def get_total_comments(self, obj):
-        comments = obj.comments.all()
-        return len(comments)
+    def get_total_comments(self, obj) -> int:
+        return obj.comments.count()
     
-    def get_total_likes(self, obj):
-        likes = obj.likes.all()
-        return len(likes)
+    def get_total_likes(self, obj) -> int:
+        return obj.likes.count()
+    
+    def get_is_liked(self, obj) -> bool:
+        user = self.context['request'].user
+        return obj.likes.filter(user=user).exists()
 
     class Meta:
         model = Post
         fields = (
-            'id',
+            'post_id',
             'post',
             'image',
-            'comments',
             'total_comments',
+            'is_liked',
             'total_likes',
             'visibility',
             'created_at',
@@ -48,3 +50,4 @@ class PostCommentSerializer(serializers.ModelSerializer):
             'comments',
             'created_at',
         )
+

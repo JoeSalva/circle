@@ -1,0 +1,195 @@
+openapi: 3.0.3
+info:
+  title: Social Media API
+  version: 1.0.0
+  description: A Social media API made to show my profiency in DRF
+paths:
+  /post_feed/{id}/comments:
+    get:
+      operationId: post_feed_comments_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - post_feed
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostComment'
+          description: ''
+  /post_feed/add_post:
+    get:
+      operationId: post_feed_add_post_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - post_feed
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedFeedPostList'
+          description: ''
+    post:
+      operationId: post_feed_add_post_create
+      tags:
+      - post_feed
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedPost'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/FeedPost'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/FeedPost'
+        required: true
+      security:
+      - jwtAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FeedPost'
+          description: ''
+components:
+  schemas:
+    Comment:
+      type: object
+      properties:
+        user:
+          type: integer
+        comment:
+          type: string
+          maxLength: 1000
+        image:
+          type: string
+          format: uri
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - comment
+      - created_at
+      - user
+    FeedPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        post:
+          type: string
+          maxLength: 1000
+        image:
+          type: string
+          format: uri
+          nullable: true
+        total_comments:
+          type: integer
+          readOnly: true
+        total_likes:
+          type: integer
+          readOnly: true
+        visibility:
+          $ref: '#/components/schemas/VisibilityEnum'
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - post
+      - total_comments
+      - total_likes
+    PaginatedFeedPostList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeedPost'
+    PostComment:
+      type: object
+      properties:
+        post:
+          type: string
+          maxLength: 1000
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - comments
+      - created_at
+      - post
+    VisibilityEnum:
+      enum:
+      - public
+      - private
+      type: string
+      description: |-
+        * `public` - Public
+        * `private` - Private
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

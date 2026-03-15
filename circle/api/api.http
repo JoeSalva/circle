@@ -1,1 +1,22 @@
-GET 
+POST http://127.0.0.1:8000/post_feed/add_post HTTP/1.1
+Content-Type: application/json
+Authorization: Basic admin:admin
+
+{
+    "post": "Soso take that pain away",
+    "image": null,
+    "visibility": "private"
+}
+
+###
+
+GET http://127.0.0.1:8000/post_feed/add_post HTTP/1.1
+###
+
+POST http://127.0.0.1:8000/api/token/ HTTP/1.1
+Content-Type: application/json
+
+{
+    "username": "admin_two",
+    "password": "admin2"
+}
