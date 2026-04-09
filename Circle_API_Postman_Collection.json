@@ -1,0 +1,174 @@
+{
+    "info": {
+        "name": "Circle API",
+        "_postman_id": "circle-api-collection",
+        "description": "Full Postman collection for Circle API (Users, Posts, Interactions, Profiles)",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Auth",
+            "item": [
+                {
+                    "name": "Sign Up",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "url": {"raw": "{{base_url}}/auth/signup/", "host": ["{{base_url}}"], "path": ["auth","signup"]},
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\": \"john_doe\", \"password\": \"StrongPassword123!\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Token Obtain",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "url": {"raw": "{{base_url}}/api/token/", "host": ["{{base_url}}"], "path": ["api","token"]},
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"username\": \"john_doe\", \"password\": \"StrongPassword123!\"}"
+                        }
+                    }
+                },
+                {
+                    "name": "Token Refresh",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Content-Type", "value": "application/json"}],
+                        "url": {"raw": "{{base_url}}/api/token/refresh/", "host": ["{{base_url}}"], "path": ["api","token","refresh"]},
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\"refresh\": \"{{refresh_token}}\"}"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Posts",
+            "item": [
+                {
+                    "name": "Create Post",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {"raw": "{{base_url}}/posts/", "host": ["{{base_url}}"], "path": ["posts"]},
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {"key": "post", "value": "My post content", "type": "text"},
+                                {"key": "image", "type": "file"},
+                                {"key": "visibility", "value": "public", "type": "text"}
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Get All Posts",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {"raw": "{{base_url}}/posts/?limit=10&offset=0", "host": ["{{base_url}}"], "path": ["posts"], "query":[{"key":"limit","value":"10"},{"key":"offset","value":"0"}]}
+                    }
+                },
+                {
+                    "name": "Get Single Post",
+                    "request": {
+                        "method": "GET",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {"raw": "{{base_url}}/posts/:post_id", "host": ["{{base_url}}"], "path": ["posts",":post_id"]}
+                    }
+                },
+                {
+                    "name": "Like / Unlike Post",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {"raw": "{{base_url}}/posts/:post_id/like", "host": ["{{base_url}}"], "path": ["posts",":post_id","like"]}
+                    }
+                },
+                {
+                    "name": "Comment on Post",
+                    "request": {
+                        "method": "POST",
+                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
+                        "url": {"raw": "{{base_url}}/posts/:post_id/comments", "host": ["{{base_url}}"], "path": ["posts",":post_id","comments"]},
+                        "body": {
+                            "mode": "formdata",
+                            "formdata":[
+                                {"key":"comment","value":"Nice post!","type":"text"},
+                                {"key":"image","type":"file"}
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Profiles",
+            "item":[
+                {
+                    "name":"Get My Profile",
+                    "request": {
+                        "method":"GET",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/user/me/profile/","host":["{{base_url}}"],"path":["user","me","profile"]}
+                    }
+                },
+                {
+                    "name":"Get User Profile",
+                    "request": {
+                        "method":"GET",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/user/:user_id/profile/","host":["{{base_url}}"],"path":["user",":user_id","profile"]}
+                    }
+                },
+                {
+                    "name":"Get All Profiles",
+                    "request": {
+                        "method":"GET",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/users/profile/","host":["{{base_url}}"],"path":["users","profile"]}
+                    }
+                }
+            ]
+        },
+        {
+            "name": "User Interactions",
+            "item":[
+                {
+                    "name":"Follow / Unfollow User",
+                    "request": {
+                        "method":"POST",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/follow/user/:id","host":["{{base_url"],"path":["follow","user",":id"]}
+                    }
+                },
+                {
+                    "name":"Followers List",
+                    "request": {
+                        "method":"GET",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/user/me/followers/","host":["{{base_url}}"],"path":["user","me","followers"]}
+                    }
+                },
+                {
+                    "name":"Following List",
+                    "request": {
+                        "method":"GET",
+                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
+                        "url":{"raw":"{{base_url}}/user/me/following/","host":["{{base_url}}"],"path":["user","me","following"]}
+                    }
+                }
+            ]
+        }
+    ],
+    "variable":[
+        {"key":"base_url","value":"http://localhost:8000"},
+        {"key":"token","value":""},
+        {"key":"refresh_token","value":""}
+    ]
+}

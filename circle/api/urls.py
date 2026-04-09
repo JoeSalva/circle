@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from .views import PostDetailAPIView, PostListCreateAPIView
+from .views import PostDetailAPIView, PostListCreateAPIView, FollowingPostsListAPIView, LikedPostsListAPIView, SavedPostsListAPIView
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -8,8 +8,11 @@ from rest_framework_simplejwt.views import (
 )
 
 urlpatterns = [
-    path('feed/post/<uuid:post_id>', PostDetailAPIView.as_view(), name='post'),
-    path('feed/posts/', PostListCreateAPIView.as_view(), name='add_post'),
+    path('posts/<uuid:post_id>', PostDetailAPIView.as_view(), name='post'),
+    path('posts/', PostListCreateAPIView.as_view(), name='add_post'),
+    path('following/posts/', FollowingPostsListAPIView.as_view(), name='friend_posts'),
+    path('liked/posts/', LikedPostsListAPIView.as_view(), name='liked_posts'),
+    path('saved/posts/', SavedPostsListAPIView.as_view(), name='saved_posts'),
 
     #Schema/Documentation
     path('circle/schema/', SpectacularAPIView.as_view(), name='schema'),
