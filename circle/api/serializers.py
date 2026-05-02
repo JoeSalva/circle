@@ -2,15 +2,20 @@ from rest_framework import serializers
 from rest_framework.reverse import reverse
 from core.models import Post, User
 
+
 class AuthorSerializer(serializers.ModelSerializer):
+    """Serializer for user/author information in posts."""
     class Meta:
         model = User
-        fields = (
-            'id',
-            'username'
-        )
+        fields = ('id', 'username')
+
 
 class PostSerializer(serializers.ModelSerializer):
+    """Serializer for post list view with essential fields and metadata.
+    
+    Used in list views where we show a feed of posts.
+    Optimized with prefetch_related in views for likes, comments, and saved.
+    """
     post_id = serializers.UUIDField(read_only=True)
     total_comments = serializers.SerializerMethodField()
     total_likes = serializers.SerializerMethodField()
@@ -20,23 +25,27 @@ class PostSerializer(serializers.ModelSerializer):
     user = AuthorSerializer(read_only=True)
 
     def get_total_comments(self, obj) -> int:
+        """Get comment count (uses prefetched data from view)."""
         return obj.comments.count()
     
     def get_total_likes(self, obj) -> int:
+        """Get like count (uses prefetched data from view)."""
         return obj.likes.count()
     
     def get_is_liked(self, obj) -> bool:
+        """Check if current user has liked this post."""
         user = self.context['request'].user
         return obj.likes.filter(user=user).exists()
     
-    def get_post_url(self, obj):
+    def get_post_url(self, obj) -> str:
+        """Generate URL to post detail view."""
         request = self.context.get('request')
         return reverse('post', kwargs={'post_id':obj.post_id}, request=request)
     
-    def get_is_saved(self, obj):
+    def get_is_saved(self, obj) -> bool:
+        """Check if current user has saved this post."""
         user = self.context['request'].user
         return obj.saved.filter(user=user).exists()
-    
 
     class Meta:
         model = Post
@@ -53,8 +62,15 @@ class PostSerializer(serializers.ModelSerializer):
             'post_url',
             'created_at',
         )
+        read_only_fields = ('post_id', 'created_at', 'user')
+
 
 class SinglePostSerializer(serializers.ModelSerializer):
+    """Serializer for post detail view with extended metadata.
+    
+    Used in detail views where we show a single post with all interactions.
+    Includes comments URL and saves count; replaces post_url with comments_url.
+    """
     post_id = serializers.UUIDField(read_only=True)
     total_comments = serializers.SerializerMethodField()
     total_likes = serializers.SerializerMethodField()
@@ -64,21 +80,25 @@ class SinglePostSerializer(serializers.ModelSerializer):
     user = AuthorSerializer(read_only=True)
 
     def get_total_comments(self, obj) -> int:
+        """Get comment count (uses prefetched data from view)."""
         return obj.comments.count()
     
     def get_total_likes(self, obj) -> int:
+        """Get like count (uses prefetched data from view)."""
         return obj.likes.count()
     
     def get_is_liked(self, obj) -> bool:
+        """Check if current user has liked this post."""
         user = self.context['request'].user
         return obj.likes.filter(user=user).exists()
     
-    def get_comments_url(self, obj):
+    def get_comments_url(self, obj) -> str:
+        """Generate URL to comments endpoint for this post."""
         request = self.context.get('request')
         return reverse('comments', kwargs={'post_id':obj.post_id}, request=request)
     
-    def get_total_saves(self, obj):
-        user = self.context['request'].user
+    def get_total_saves(self, obj) -> int:
+        """Get the number of times this post has been saved."""
         return obj.saved.count()
 
     class Meta:
@@ -94,4 +114,6 @@ class SinglePostSerializer(serializers.ModelSerializer):
             'total_saves',
             'comments_url',
             'created_at',
+            'visibility',
         )
+        read_only_fields = ('post_id', 'created_at', 'user')

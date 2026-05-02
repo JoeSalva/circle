@@ -18,8 +18,4 @@ urlpatterns = [
     path('circle/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('circle/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('circle/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
-
-    #Simple-Jwt
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

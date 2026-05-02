@@ -1,16 +1,14 @@
 from django.contrib import admin
-from .models import User
-from user_profile.models import Profile
+from .models import Profile
 
-# Register your models here.
 
-class ProfileInline(admin.TabularInline):
-    model = Profile
-    can_delete = False
-
-class UserAdmin(admin.ModelAdmin):
-    inlines = [
-        ProfileInline
-    ]
-
-admin.site.register(User, UserAdmin)
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    """Admin for Profile model."""
+    list_display = ('user', 'location', 'desc')
+    search_fields = ('user__username', 'location')
+    readonly_fields = ('user',)
+    fieldsets = (
+        ('User', {'fields': ('user',)}),
+        ('Profile Info', {'fields': ('desc', 'location')}),
+    )
