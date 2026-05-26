@@ -17,25 +17,21 @@ class PostSerializer(serializers.ModelSerializer):
     Optimized with prefetch_related in views for likes, comments, and saved.
     """
     post_id = serializers.UUIDField(read_only=True)
-    total_comments = serializers.SerializerMethodField()
-    total_likes = serializers.SerializerMethodField()
+    total_comments = serializers.IntegerField(read_only=True)
+    total_likes = serializers.IntegerField(read_only=True)
     is_liked = serializers.SerializerMethodField()
     post_url = serializers.SerializerMethodField()
     is_saved = serializers.SerializerMethodField()
     user = AuthorSerializer(read_only=True)
-
-    def get_total_comments(self, obj) -> int:
-        """Get comment count (uses prefetched data from view)."""
-        return obj.comments.count()
-    
-    def get_total_likes(self, obj) -> int:
-        """Get like count (uses prefetched data from view)."""
-        return obj.likes.count()
     
     def get_is_liked(self, obj) -> bool:
         """Check if current user has liked this post."""
         user = self.context['request'].user
-        return obj.likes.filter(user=user).exists()
+
+        if not user.is_authenticated:
+            return False
+        
+        return len(getattr(obj, 'user_likes', [])) > 0
     
     def get_post_url(self, obj) -> str:
         """Generate URL to post detail view."""
@@ -45,7 +41,11 @@ class PostSerializer(serializers.ModelSerializer):
     def get_is_saved(self, obj) -> bool:
         """Check if current user has saved this post."""
         user = self.context['request'].user
-        return obj.saved.filter(user=user).exists()
+
+        if not user.is_authenticated:
+            return False
+        
+        return len(getattr(obj, 'user_saved', [])) > 0
 
     class Meta:
         model = Post
@@ -72,25 +72,20 @@ class SinglePostSerializer(serializers.ModelSerializer):
     Includes comments URL and saves count; replaces post_url with comments_url.
     """
     post_id = serializers.UUIDField(read_only=True)
-    total_comments = serializers.SerializerMethodField()
-    total_likes = serializers.SerializerMethodField()
+    total_comments = serializers.IntegerField(read_only=True)
+    total_likes = serializers.IntegerField(read_only=True)
     is_liked = serializers.SerializerMethodField()
+    is_saved = serializers.SerializerMethodField()
     comments_url = serializers.SerializerMethodField()
-    total_saves = serializers.SerializerMethodField()
+    total_saves = serializers.IntegerField(read_only=True)
     user = AuthorSerializer(read_only=True)
-
-    def get_total_comments(self, obj) -> int:
-        """Get comment count (uses prefetched data from view)."""
-        return obj.comments.count()
-    
-    def get_total_likes(self, obj) -> int:
-        """Get like count (uses prefetched data from view)."""
-        return obj.likes.count()
     
     def get_is_liked(self, obj) -> bool:
         """Check if current user has liked this post."""
         user = self.context['request'].user
-        return obj.likes.filter(user=user).exists()
+        if not user.is_authenticated:
+            return False
+        return len(getattr(obj, 'user_likes', [])) > 0
     
     def get_comments_url(self, obj) -> str:
         """Generate URL to comments endpoint for this post."""
@@ -100,6 +95,15 @@ class SinglePostSerializer(serializers.ModelSerializer):
     def get_total_saves(self, obj) -> int:
         """Get the number of times this post has been saved."""
         return obj.saved.count()
+    
+    def get_is_saved(self, obj) -> bool:
+        """Check if current user has saved this post."""
+        user = self.context['request'].user
+
+        if not user.is_authenticated:
+            return False
+        
+        return len(getattr(obj, 'user_saved', [])) > 0
 
     class Meta:
         model = Post
@@ -110,6 +114,7 @@ class SinglePostSerializer(serializers.ModelSerializer):
             'user',
             'total_comments',
             'is_liked',
+            'is_saved',
             'total_likes',
             'total_saves',
             'comments_url',

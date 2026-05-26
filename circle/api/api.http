@@ -17,6 +17,17 @@ POST http://127.0.0.1:8000/api/token/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "username": "admin_two",
-    "password": "admin2"
+    "username": "admin",
+    "password": "admin"
+}
+###
+
+POST http://127.0.0.1:8000/posts/ HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzc5MjMyNzM3LCJpYXQiOjE3NzkyMzI0MzcsImp0aSI6ImQ3YmZiY2NmOGQxNDQ5ZGNhZTllMWQ5Y2M4NWViNzk4IiwidXNlcl9pZCI6IjQifQ.pv23ViL_QchjTn8dzDpyaKuNF5YDWNMjZeE-UOVrvaU
+
+{
+    "post": "Let's test celery",
+    "image": null,
+    "visibility": "public"
 }

@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 
 class UsersProfileList(generics.ListAPIView):
     """List all user profiles except the current user."""
+    throttle_scope = 'profiles'
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination

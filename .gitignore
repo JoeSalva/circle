@@ -59,3 +59,6 @@ htmlcov/
 # OS
 Thumbs.db
 .DS_Store
+
+#files
+perf_test.md

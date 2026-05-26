@@ -1,10 +1,12 @@
-from rest_framework import generics
+from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.shortcuts import get_object_or_404
 from core.models import Post, Like, Comment, User, Following, Saved
 from .serializers import LikeSerializer, CommentSerializer, FollowSerializer, UserSerializer, SavedPostsSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from api.filters import UserFilter
 
 
 class ToggleLikeAPIView(generics.GenericAPIView):
@@ -70,6 +72,9 @@ class FollowersListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
+    pagination_class = PageNumberPagination
+    # filter_backends = [DjangoFilterBackend, filters.]
+    filterset_class = UserFilter
 
     def get_queryset(self): # type: ignore
         """Get all users following the current user."""
@@ -82,6 +87,8 @@ class FollowingListAPIView(generics.ListAPIView):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
+    # filter_backends = [DjangoFilterBackend, filters.]
+    filter_class = UserFilter
 
     def get_queryset(self): # type: ignore
         """Get all users followed by the current user."""
