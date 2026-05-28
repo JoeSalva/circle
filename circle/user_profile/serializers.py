@@ -7,28 +7,27 @@ from core.models import Post
 class UserPostsSerializer(serializers.ModelSerializer):
     """Serializer for posts in user profile."""
     post_id = serializers.UUIDField(read_only=True)
-    total_comments = serializers.SerializerMethodField()
-    total_likes = serializers.SerializerMethodField()
+    total_comments = serializers.IntegerField(read_only=True)
+    total_likes = serializers.IntegerField(read_only=True)
     is_liked = serializers.SerializerMethodField()
+    post_url = serializers.SerializerMethodField()
     comments_url = serializers.SerializerMethodField()
-
-    def get_total_comments(self, obj) -> int:
-        """Get count of comments on this post."""
-        return obj.comments.count()
     
-    def get_total_likes(self, obj) -> int:
-        """Get count of likes on this post."""
-        return obj.likes.count()
     
     def get_is_liked(self, obj) -> bool:
         """Check if current user has liked this post."""
-        user = self.context['request'].user
-        return obj.likes.filter(user=user).exists()
+        # user = self.context['request'].user
+        return bool(getattr(obj, 'user_likes', []))
     
     def get_comments_url(self, obj) -> str:
         """Get URL to comments endpoint."""
         request = self.context.get('request')
         return reverse('comments', kwargs={'post_id': obj.post_id}, request=request)
+    
+    def get_post_url(self, obj) -> str:
+        """Generate URL to post detail view."""
+        request = self.context.get('request')
+        return reverse('post', kwargs={'post_id':obj.post_id}, request=request)
 
     class Meta:
         model = Post
@@ -40,43 +39,43 @@ class UserPostsSerializer(serializers.ModelSerializer):
             'is_liked',
             'total_likes',
             'visibility',
+            'post_url',
             'comments_url',
             'created_at',
         )
-        read_only_fields = ('post_id', 'created_at', 'is_liked', 'total_comments', 'total_likes', 'comments_url')
+        read_only_fields = ('post_id', 'created_at', 'is_liked', 'total_comments', 'total_likes', 'comments_url', 'post_url')
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     """Serializer for public user profile information."""
     username = serializers.CharField(source='user.username', read_only=True)
-    total_posts = serializers.SerializerMethodField(read_only=True)
-    followers = serializers.SerializerMethodField()
-    following = serializers.SerializerMethodField()
-    is_following = serializers.SerializerMethodField()
-    is_follower = serializers.SerializerMethodField()
+    total_posts = serializers.IntegerField(read_only=True)
+    followers = serializers.IntegerField(read_only=True)
+    following = serializers.IntegerField(read_only=True)
+    user_follows = serializers.SerializerMethodField()
+    follows_user = serializers.SerializerMethodField()
     posts_url = serializers.SerializerMethodField()
 
-    def get_total_posts(self, obj) -> int:
-        """Get count of posts by this user."""
-        return obj.user.posts.count()
+    # def get_total_posts(self, obj) -> int:
+    #     """Get count of posts by this user."""
+    #     return len(obj.user.posts.count())
     
-    def get_following(self, obj) -> int:
-        """Get count of users this user is following."""
-        return obj.user.follower.count()    
+    # def get_following(self, obj) -> int:
+    #     """Get count of users this user is following."""
+    #     return obj.user.follower.count()    
    
-    def get_followers(self, obj) -> int:
-        """Get count of followers for this user."""
-        return obj.user.followed.count()
+    # def get_followers(self, obj) -> int:
+    #     """Get count of followers for this user."""
+    #     return obj.user.followed.count()
     
-    def get_is_following(self, obj) -> bool:
+    def get_user_follows(self, obj) -> bool:
         """Check if current user is following this user."""
-        user = self.context['request'].user
-        return user.follower.filter(following=obj.user).exists()
+        # Uses prefetched data from view
+        return bool(getattr(obj.user, 'user_follows', []))
         
-    def get_is_follower(self, obj) -> bool:
+    def get_follows_user(self, obj) -> bool:
         """Check if this user is following the current user."""
-        user = self.context['request'].user
-        return user.followed.filter(follower=obj.user).exists()
+        return bool(getattr(obj.user, 'follows_user', []))
         
     def get_posts_url(self, obj) -> str:
         """Get URL to user's posts."""
@@ -92,32 +91,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'total_posts',
             'following',
             'followers',
-            'is_following',
-            'is_follower',
+            'user_follows',
+            'follows_user',
             'posts_url'
         )
-        read_only_fields = ('username', 'total_posts', 'following', 'followers', 'is_following', 'is_follower', 'posts_url')
+        read_only_fields = ('username', 'total_posts', 'following', 'followers', 'user_follows', 'follows_user', 'posts_url')
 
 
 class PrivateProfileSerializer(serializers.ModelSerializer):
     """Serializer for current user's profile (editable)."""
     username = serializers.CharField(source='user.username', read_only=True)
-    total_posts = serializers.SerializerMethodField(read_only=True)
-    followers = serializers.SerializerMethodField()
-    following = serializers.SerializerMethodField()
+    total_posts = serializers.IntegerField(read_only=True)
+    followers = serializers.IntegerField(read_only=True)
+    following = serializers.IntegerField(read_only=True)
     posts_url = serializers.SerializerMethodField()
-
-    def get_total_posts(self, obj) -> int:
-        """Get count of posts by this user."""
-        return obj.user.posts.count()
-    
-    def get_followers(self, obj) -> int:
-        """Get count of followers."""
-        return obj.user.follower.count()
-    
-    def get_following(self, obj) -> int:
-        """Get count of users being followed."""
-        return obj.user.followed.count()
 
     def get_posts_url(self, obj) -> str:
         """Get URL to user's posts."""

@@ -123,7 +123,15 @@ class LikedPostsListAPIView(generics.ListAPIView):
 
     def get_queryset(self): # type: ignore
         """Get posts liked by the current user."""
-        return Post.objects.filter(likes__user=self.request.user).select_related('user').prefetch_related('likes', 'comments', 'saved').distinct()
+        return Post.objects.filter(likes__user=self.request.user).annotate(
+                total_likes=Count('likes', distinct=True),
+                total_comments=Count('comments', distinct=True),   
+            ).select_related('user').prefetch_related('comments', 'saved').distinct()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['liked_post_endpoint'] = True
+        return context
 
 
 class SavedPostsListAPIView(generics.ListAPIView):
@@ -134,4 +142,12 @@ class SavedPostsListAPIView(generics.ListAPIView):
 
     def get_queryset(self): # type: ignore
         """Get posts saved by the current user."""
-        return Post.objects.filter(saved__user=self.request.user).select_related('user').prefetch_related('likes', 'comments', 'saved').distinct()
+        return Post.objects.filter(saved__user=self.request.user).annotate(
+                total_likes=Count('likes', distinct=True),
+                total_comments=Count('comments', distinct=True),   
+            ).select_related('user').prefetch_related('likes', 'comments').distinct()
+    
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['saved_post_endpoint'] = True
+        return context

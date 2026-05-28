@@ -82,28 +82,30 @@ class SinglePostSerializer(serializers.ModelSerializer):
     
     def get_is_liked(self, obj) -> bool:
         """Check if current user has liked this post."""
+        if self.context.get("liked_post_endpoint"):
+            return True
+
         user = self.context['request'].user
         if not user.is_authenticated:
             return False
-        return len(getattr(obj, 'user_likes', [])) > 0
+        return bool(getattr(obj, 'user_likes', []))
     
     def get_comments_url(self, obj) -> str:
         """Generate URL to comments endpoint for this post."""
         request = self.context.get('request')
         return reverse('comments', kwargs={'post_id':obj.post_id}, request=request)
     
-    def get_total_saves(self, obj) -> int:
-        """Get the number of times this post has been saved."""
-        return obj.saved.count()
-    
     def get_is_saved(self, obj) -> bool:
         """Check if current user has saved this post."""
+        if self.context.get('saved_post_endpoint'):
+            return True
+
         user = self.context['request'].user
 
         if not user.is_authenticated:
             return False
         
-        return len(getattr(obj, 'user_saved', [])) > 0
+        return bool(getattr(obj, 'user_saved', []))
 
     class Meta:
         model = Post
