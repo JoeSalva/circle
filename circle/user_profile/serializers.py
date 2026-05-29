@@ -56,26 +56,15 @@ class UserProfileSerializer(serializers.ModelSerializer):
     follows_user = serializers.SerializerMethodField()
     posts_url = serializers.SerializerMethodField()
 
-    # def get_total_posts(self, obj) -> int:
-    #     """Get count of posts by this user."""
-    #     return len(obj.user.posts.count())
-    
-    # def get_following(self, obj) -> int:
-    #     """Get count of users this user is following."""
-    #     return obj.user.follower.count()    
-   
-    # def get_followers(self, obj) -> int:
-    #     """Get count of followers for this user."""
-    #     return obj.user.followed.count()
     
     def get_user_follows(self, obj) -> bool:
         """Check if current user is following this user."""
         # Uses prefetched data from view
-        return bool(getattr(obj.user, 'user_follows', []))
+        return len(getattr(obj.user, 'followed_by_me', [])) > 0
         
     def get_follows_user(self, obj) -> bool:
         """Check if this user is following the current user."""
-        return bool(getattr(obj.user, 'follows_user', []))
+        return len(getattr(obj.user, 'following_me', [])) > 0
         
     def get_posts_url(self, obj) -> str:
         """Get URL to user's posts."""

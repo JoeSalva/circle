@@ -24,12 +24,12 @@ class UsersProfileList(generics.ListAPIView):
         ).select_related('user'
                          ).prefetch_related(
                              Prefetch('user__follower',
-                                       queryset=Following.objects.filter(follower=self.request.user),
-                                       to_attr='follows_user',
+                                       queryset=Following.objects.filter(following=self.request.user),
+                                       to_attr='following_me',
                                        ),
                             Prefetch('user__followed',
-                                      queryset=Following.objects.filter(following=self.request.user),
-                                      to_attr='user_follows'
+                                      queryset=Following.objects.filter(follower=self.request.user),
+                                      to_attr='followed_by_me'
                                       ),
                          )
 
