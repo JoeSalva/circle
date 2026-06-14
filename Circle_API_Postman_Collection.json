@@ -1,174 +1,918 @@
 {
-    "info": {
-        "name": "Circle API",
-        "_postman_id": "circle-api-collection",
-        "description": "Full Postman collection for Circle API (Users, Posts, Interactions, Profiles)",
-        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-    },
-    "item": [
-        {
-            "name": "Auth",
-            "item": [
-                {
-                    "name": "Sign Up",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Content-Type", "value": "application/json"}],
-                        "url": {"raw": "{{base_url}}/auth/signup/", "host": ["{{base_url}}"], "path": ["auth","signup"]},
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"username\": \"john_doe\", \"password\": \"StrongPassword123!\"}"
-                        }
-                    }
-                },
-                {
-                    "name": "Token Obtain",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Content-Type", "value": "application/json"}],
-                        "url": {"raw": "{{base_url}}/api/token/", "host": ["{{base_url}}"], "path": ["api","token"]},
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"username\": \"john_doe\", \"password\": \"StrongPassword123!\"}"
-                        }
-                    }
-                },
-                {
-                    "name": "Token Refresh",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Content-Type", "value": "application/json"}],
-                        "url": {"raw": "{{base_url}}/api/token/refresh/", "host": ["{{base_url}}"], "path": ["api","token","refresh"]},
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\"refresh\": \"{{refresh_token}}\"}"
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Posts",
-            "item": [
-                {
-                    "name": "Create Post",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-                        "url": {"raw": "{{base_url}}/posts/", "host": ["{{base_url}}"], "path": ["posts"]},
-                        "body": {
-                            "mode": "formdata",
-                            "formdata": [
-                                {"key": "post", "value": "My post content", "type": "text"},
-                                {"key": "image", "type": "file"},
-                                {"key": "visibility", "value": "public", "type": "text"}
-                            ]
-                        }
-                    }
-                },
-                {
-                    "name": "Get All Posts",
-                    "request": {
-                        "method": "GET",
-                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-                        "url": {"raw": "{{base_url}}/posts/?limit=10&offset=0", "host": ["{{base_url}}"], "path": ["posts"], "query":[{"key":"limit","value":"10"},{"key":"offset","value":"0"}]}
-                    }
-                },
-                {
-                    "name": "Get Single Post",
-                    "request": {
-                        "method": "GET",
-                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-                        "url": {"raw": "{{base_url}}/posts/:post_id", "host": ["{{base_url}}"], "path": ["posts",":post_id"]}
-                    }
-                },
-                {
-                    "name": "Like / Unlike Post",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-                        "url": {"raw": "{{base_url}}/posts/:post_id/like", "host": ["{{base_url}}"], "path": ["posts",":post_id","like"]}
-                    }
-                },
-                {
-                    "name": "Comment on Post",
-                    "request": {
-                        "method": "POST",
-                        "header": [{"key": "Authorization", "value": "Bearer {{token}}"}],
-                        "url": {"raw": "{{base_url}}/posts/:post_id/comments", "host": ["{{base_url}}"], "path": ["posts",":post_id","comments"]},
-                        "body": {
-                            "mode": "formdata",
-                            "formdata":[
-                                {"key":"comment","value":"Nice post!","type":"text"},
-                                {"key":"image","type":"file"}
-                            ]
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Profiles",
-            "item":[
-                {
-                    "name":"Get My Profile",
-                    "request": {
-                        "method":"GET",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/user/me/profile/","host":["{{base_url}}"],"path":["user","me","profile"]}
-                    }
-                },
-                {
-                    "name":"Get User Profile",
-                    "request": {
-                        "method":"GET",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/user/:user_id/profile/","host":["{{base_url}}"],"path":["user",":user_id","profile"]}
-                    }
-                },
-                {
-                    "name":"Get All Profiles",
-                    "request": {
-                        "method":"GET",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/users/profile/","host":["{{base_url}}"],"path":["users","profile"]}
-                    }
-                }
-            ]
-        },
-        {
-            "name": "User Interactions",
-            "item":[
-                {
-                    "name":"Follow / Unfollow User",
-                    "request": {
-                        "method":"POST",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/follow/user/:id","host":["{{base_url"],"path":["follow","user",":id"]}
-                    }
-                },
-                {
-                    "name":"Followers List",
-                    "request": {
-                        "method":"GET",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/user/me/followers/","host":["{{base_url}}"],"path":["user","me","followers"]}
-                    }
-                },
-                {
-                    "name":"Following List",
-                    "request": {
-                        "method":"GET",
-                        "header":[{"key":"Authorization","value":"Bearer {{token}}"}],
-                        "url":{"raw":"{{base_url}}/user/me/following/","host":["{{base_url}}"],"path":["user","me","following"]}
-                    }
-                }
-            ]
-        }
-    ],
-    "variable":[
-        {"key":"base_url","value":"http://localhost:8000"},
-        {"key":"token","value":""},
-        {"key":"refresh_token","value":""}
+  "info": {
+    "name": "Circle API",
+    "_postman_id": "circle-api-collection",
+    "description": "Postman documentation collection for the Circle social media API. Set `base_url`, run Auth > Sign Up, then Auth > Obtain JWT Token. The token requests automatically save `access_token` and `refresh_token` collection variables when successful.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
     ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test(\"Response has a valid HTTP status\", function () {",
+          "  pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 400, 401, 403, 404]);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "description": "User registration and JWT authentication endpoints.",
+      "item": [
+        {
+          "name": "Sign Up",
+          "description": "Create a user account. Password must satisfy the Django password validators configured in the project.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"password\": \"StrongPassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/signup/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "auth",
+                "signup"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obtain JWT Token",
+          "description": "Exchange username and password for Simple JWT access and refresh tokens. Successful responses are saved into collection variables.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set(\"access_token\", json.access);",
+                  "  pm.collectionVariables.set(\"refresh_token\", json.refresh);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"john_doe\",\n  \"password\": \"StrongPassword123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/token/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refresh JWT Token",
+          "description": "Use a refresh token to get a new access token. Successful responses update `access_token`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  pm.collectionVariables.set(\"access_token\", pm.response.json().access);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/token/refresh/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "token",
+                "refresh"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "description": "Post feed, post detail, and authenticated post management. Visibility values are `public` or `private`.",
+      "item": [
+        {
+          "name": "List Posts",
+          "description": "List all posts. Supports pagination, username filtering, post text filtering, search, and ordering by `created_at`.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/?page=1&username=&post__icontains=&search=&ordering=-created_at",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Page number for DRF PageNumberPagination."
+                },
+                {
+                  "key": "username",
+                  "value": "",
+                  "description": "Case-insensitive username filter."
+                },
+                {
+                  "key": "post__icontains",
+                  "value": "",
+                  "description": "Case-insensitive filter against post text."
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search by username or post text."
+                },
+                {
+                  "key": "ordering",
+                  "value": "-created_at",
+                  "description": "Use `created_at` or `-created_at`."
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Post",
+          "description": "Create a post for the authenticated user. `image` is optional.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "post",
+                  "value": "My post content",
+                  "type": "text",
+                  "description": "Required. Up to 1000 characters."
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Optional image upload."
+                },
+                {
+                  "key": "visibility",
+                  "value": "public",
+                  "type": "text",
+                  "description": "`public` or `private`."
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Post",
+          "description": "Retrieve one post by UUID.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Post",
+          "description": "Replace a post. Only the owner can update.",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "post",
+                  "value": "Updated post content",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "visibility",
+                  "value": "public",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Partially Update Post",
+          "description": "Patch one or more fields on a post. Only the owner can update.",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"post\": \"A smaller update\",\n  \"visibility\": \"public\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "description": "Delete a post. Only the owner can delete.",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Following Feed",
+          "description": "List posts from users the authenticated user follows.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/following/posts/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "following",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Liked Posts",
+          "description": "List posts liked by the authenticated user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/liked/posts/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "liked",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Saved Posts",
+          "description": "List posts saved by the authenticated user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/saved/posts/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "saved",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Interactions",
+      "description": "Likes, saves, comments, and follow relationships. Toggle endpoints return booleans showing the new state.",
+      "item": [
+        {
+          "name": "Like or Unlike Post",
+          "description": "Toggle the authenticated user's like on a post. Response example: `{ \"liked\": true }`.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}/like",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}",
+                "like"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Save or Unsave Post",
+          "description": "Toggle the authenticated user's saved state for a post. Response example: `{ \"saved\": true }`.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}/save",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}",
+                "save"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List Post Comments",
+          "description": "List comments for a post, newest first.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}/comments?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}",
+                "comments"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Comment",
+          "description": "Create a comment on a post. `image` is optional.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "comment",
+                  "value": "Nice post!",
+                  "type": "text",
+                  "description": "Required. Up to 1000 characters."
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": [],
+                  "description": "Optional image upload."
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/{{post_id}}/comments",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "posts",
+                "{{post_id}}",
+                "comments"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Follow or Unfollow User",
+          "description": "Toggle following another user by numeric user ID. Users cannot follow themselves.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/follow/user/{{user_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "follow",
+                "user",
+                "{{user_id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Followers List",
+          "description": "List users who follow the authenticated user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/me/followers/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "followers"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Following List",
+          "description": "List users followed by the authenticated user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/me/following/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "following"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "description": "Public profiles, current-user profile updates, and user-specific post lists.",
+      "item": [
+        {
+          "name": "List Profiles",
+          "description": "List all profiles except the authenticated user's profile.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/users/profile/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "users",
+                "profile"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get User Profile",
+          "description": "Retrieve a public profile by numeric user ID.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/{{user_id}}/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{user_id}}",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get My Profile",
+          "description": "Retrieve the authenticated user's private profile.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/me/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update My Profile",
+          "description": "Update editable current-user profile fields.",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"desc\": \"Backend engineer building Circle.\",\n  \"location\": \"Lagos, Nigeria\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/user/me/profile/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List My Posts",
+          "description": "List posts owned by the authenticated user.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/me/posts/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create My Post",
+          "description": "Alternative authenticated post creation endpoint scoped under the current user profile.",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "post",
+                  "value": "A post from my profile endpoint",
+                  "type": "text"
+                },
+                {
+                  "key": "image",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "visibility",
+                  "value": "public",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/user/me/posts/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "me",
+                "posts"
+              ]
+            }
+          }
+        },
+        {
+          "name": "List User Posts",
+          "description": "List posts for a specific numeric user ID.",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/user/{{user_id}}/posts/?page=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "user",
+                "{{user_id}}",
+                "posts"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Documentation",
+      "description": "Generated API documentation views exposed by the Django project.",
+      "item": [
+        {
+          "name": "OpenAPI Schema",
+          "description": "Download the OpenAPI schema generated by drf-spectacular.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/circle/schema/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "circle",
+                "schema"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Swagger UI",
+          "description": "Interactive Swagger UI page.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/circle/schema/swagger-ui/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "circle",
+                "schema",
+                "swagger-ui"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Redoc",
+          "description": "Redoc documentation page.",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/circle/schema/redoc/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "circle",
+                "schema",
+                "redoc"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "post_id",
+      "value": "00000000-0000-0000-0000-000000000000",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "1",
+      "type": "string"
+    }
+  ]
 }

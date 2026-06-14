@@ -32,7 +32,7 @@ class Post(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"{self.post}"
+        return f"{self.user.username}: {self.post_id}"
 
 
 class Like(models.Model):

@@ -56,7 +56,7 @@ class PostModelTestCase(TestCase):
         """Test posts are ordered by creation date."""
         post2 = Post.objects.create(user=self.user, post='Second post')
         posts = Post.objects.all()
-        self.assertEqual(posts[0], post2)  # Most recent first
+        self.assertEqual(posts[0], post2)
 
 
 class LikeModelTestCase(TestCase):
