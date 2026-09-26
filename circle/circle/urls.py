@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 
@@ -7,5 +8,7 @@ urlpatterns = [
     path('', include('user_profile.urls')),
     path('', include('interactions.urls')),
     path('', include('authentication.urls')),
-    path('silk/', include('silk.urls', namespace='silk'))
 ]
+
+if settings.ENABLE_SILK:
+    urlpatterns.append(path('silk/', include('silk.urls', namespace='silk')))

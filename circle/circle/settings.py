@@ -13,8 +13,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 load_dotenv()
+
+# Profiling middleware (django-silk) is dev-only; enable explicitly with ENABLE_SILK=True
+ENABLE_SILK = os.getenv('ENABLE_SILK', 'False') == 'True'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,26 +46,37 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
+    'djoser',
     'core',
-    'silk',
     'api',
     'interactions',
     'authentication',
     'user_profile',
     'rest_framework',
-    'drf_spectacular'
+    # 'rest_framework.authtoken',
+    'corsheaders',
+    'drf_spectacular',
 ]
+
+if ENABLE_SILK:
+    INSTALLED_APPS.append('silk')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'silk.middleware.SilkyMiddleware',
 ]
+
+if ENABLE_SILK:
+    MIDDLEWARE.append('silk.middleware.SilkyMiddleware')
+
+CORS_ALLOWED_ORIGINS = []
 
 ROOT_URLCONF = 'circle.urls'
 
@@ -86,16 +101,25 @@ WSGI_APPLICATION = 'circle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'circle_db',
-        'USER': 'salva',
-        'PASSWORD': '    ',
-        'HOST': 'localhost',
-        'PORT': '5432',
+# Use DATABASE_URL (e.g. Neon) when provided; otherwise fall back to the local dev DB
+if os.getenv('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            conn_max_age=60,
+            ssl_require=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'circle_db',
+            'USER': 'salva',
+            'PASSWORD': '    ',
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
 
 
 # Password validation
@@ -133,13 +157,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 AUTH_USER_MODEL = "core.User"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ],
     # 'DEFAULT_THROTTLE_CLASSES': [
     #     'rest_framework.throttling.AnonRateThrottle',
@@ -163,18 +187,29 @@ SPECTACULAR_SETTINGS = {
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
-CACHES = {
-    "default":{
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+# Use REDIS_URL when provided (cache + Celery broker); otherwise degrade to
+# in-memory cache and run Celery tasks eagerly so the API works without Redis.
+REDIS_URL = os.getenv('REDIS_URL')
+
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            }
         }
     }
-}
-
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/1"
-
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/1"
+    CELERY_BROKER_URL = REDIS_URL
+    CELERY_RESULT_BACKEND = REDIS_URL
+else:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = False
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

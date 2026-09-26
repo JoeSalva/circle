@@ -19,4 +19,8 @@ def create_user_profile(sender, instance, created, **kwargs):
 @receiver([post_save, post_delete], sender=Post)
 def invalidate_post_cache(sender, instance, **kwargs):
     """to delete post caches when a post is saved or is deleted"""
-    cache.delete_pattern('*post_list*') #type:ignore
+    # delete_pattern is a django-redis feature; guard so any cache backend works
+    if hasattr(cache, 'delete_pattern'):
+        cache.delete_pattern('*post_list*')  # type: ignore[attr-defined]
+    else:
+        cache.clear()
