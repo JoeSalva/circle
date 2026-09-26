@@ -101,8 +101,16 @@ WSGI_APPLICATION = 'circle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Use DATABASE_URL (e.g. Avien) when provided; otherwise fall back to the local dev DB
-if os.getenv('DATABASE_URL'):
+# Use DATABASE_URL (e.g. Avien) when provided; USE_SQLITE=True runs on a local
+# file database (useful on restrictive free hosts); otherwise the local dev DB
+if os.getenv('USE_SQLITE') == 'True':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+elif os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
             conn_max_age=60,
