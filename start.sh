@@ -10,4 +10,4 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Starting gunicorn..."
-exec gunicorn circle.wsgi:application --bind 0.0.0.0:8000 --workers 2 --threads 4 --timeout 60
+exec gunicorn circle.wsgi:application --bind "0.0.0.0:${PORT:-8000}" --workers 2 --threads 4 --timeout 60
