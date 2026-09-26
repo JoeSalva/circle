@@ -101,7 +101,7 @@ WSGI_APPLICATION = 'circle.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# Use DATABASE_URL (e.g. Neon) when provided; otherwise fall back to the local dev DB
+# Use DATABASE_URL (e.g. Avien) when provided; otherwise fall back to the local dev DB
 if os.getenv('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
