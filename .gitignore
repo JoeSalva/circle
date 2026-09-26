@@ -52,6 +52,9 @@ db.sqlite3-journal
 *~
 .DS_Store
 
+# Folders
+.freebuff/
+
 # Testing
 .coverage
 .pytest_cache/
