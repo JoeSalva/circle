@@ -4,6 +4,17 @@ Circle is a Django REST Framework backend for a social media platform. It models
 
 The project is organized as a production-style API rather than a tutorial prototype. It uses a custom user model, normalized relationship tables for social interactions, filtered and paginated list endpoints, OpenAPI documentation through drf-spectacular, Redis-backed infrastructure for caching/Celery, and query optimizations such as `select_related`, `prefetch_related`, and annotated counts.
 
+## 🌐 Live Demo
+
+**This API is deployed and running:** <https://salvagain.pythonanywhere.com>
+
+- 📖 **Interactive docs (Swagger UI):** <https://salvagain.pythonanywhere.com/circle/schema/swagger-ui/> — open any endpoint, click **Try it out**, and run it in your browser
+- 📄 **ReDoc documentation:** <https://salvagain.pythonanywhere.com/circle/schema/redoc/>
+- 🔎 **Public sample data:** <https://salvagain.pythonanywhere.com/posts/> — 50 seeded posts with pagination
+- 🔑 **Explore authenticated endpoints:** create your own account in Swagger via `POST /auth/signup/`, then log in at `POST /api/token/` and use the access token
+
+> Deployed on PythonAnywhere (free tier) — the first request after idle may take a few seconds to wake.
+
 ## What the API Supports
 
 - User signup and JWT authentication

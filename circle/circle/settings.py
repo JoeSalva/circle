@@ -10,18 +10,23 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
-from pathlib import Path
+import pathlib
 import os
-from dotenv import load_dotenv
 import dj_database_url
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+except ModuleNotFoundError:
+    load_dotenv = None
+
+if load_dotenv is not None:
+    load_dotenv()
 
 # Profiling middleware (django-silk) is dev-only; enable explicitly with ENABLE_SILK=True
 ENABLE_SILK = os.getenv('ENABLE_SILK', 'False') == 'True'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = pathlib.Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -189,8 +194,11 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Social Media API',
-    'DESCRIPTION': 'A Social media API made to show my profiency in DRF',
+    'TITLE': 'Circle — Social Media REST API',
+    'DESCRIPTION': 'A production-style social media backend built with Django REST Framework: '
+                   'JWT authentication, posts, comments, likes, saves, follows, and profiles. '
+                   'Filtered, paginated, documented, and covered by an automated test suite. '
+                   'Browse the endpoints below and run them right in your browser.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
