@@ -22,25 +22,28 @@ class PostDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
     
     def get_queryset(self):  # type: ignore
         if self.request.method == "GET":
-            return Post.objects.select_related(
+            queryset = Post.objects.select_related(
                 'user'
             ).annotate(
                 total_likes=Count('likes', distinct=True),
                 total_comments=Count('comments', distinct=True),
                 total_saves=Count('saved', distinct=True)      
             ).prefetch_related(
-                'comments',
-                Prefetch(   
-                    'likes', 
-                    queryset=Like.objects.filter(user=self.request.user), 
-                    to_attr='user_likes'
-                ),
-                Prefetch(
-                    'saved',
-                    queryset=Saved.objects.filter(user=self.request.user),
-                    to_attr='user_saved'
+                'comments')
+            
+            if self.request.user.is_authenticated:
+                    queryset = queryset.prefetch_related(
+                    Prefetch(   
+                        'likes', 
+                        queryset=Like.objects.filter(user=self.request.user), 
+                        to_attr='user_likes'
+                    ),
+                    Prefetch(
+                        'saved',
+                        queryset=Saved.objects.filter(user=self.request.user),
+                        to_attr='user_saved'
+                    )
                 )
-            )
         return Post.objects.select_related('user')
     
     def destroy(self, request, *args, **kwargs):
@@ -71,24 +74,28 @@ class PostListCreateAPIView(generics.ListCreateAPIView):
         return super().list(request, *args, **kwargs)
 
     def get_queryset(self): # type: ignore
-        return Post.objects.select_related(
+        queryset = Post.objects.select_related(
             'user'
             ).annotate(
             total_likes = Count('likes', distinct=True),
             total_comments = Count('comments', distinct=True)            
-        ).prefetch_related(
-            'comments',
-            Prefetch(   
-                'likes', 
-                queryset=Like.objects.filter(user=self.request.user), 
-                to_attr='user_likes'
-                ),
+        ).prefetch_related('comments')
+
+        if self.request.user.is_authenticated:
+            queryset = queryset.prefetch_related(
             Prefetch(
-                'saved',
+                "likes",
+                queryset=Like.objects.filter(user=self.request.user),
+                to_attr="user_likes",
+            ),
+            Prefetch(
+                "saved",
                 queryset=Saved.objects.filter(user=self.request.user),
-                to_attr='user_saved'
-                )
-            )
+                to_attr="user_saved",
+            ),
+        )
+
+        return queryset
     
     def get_permissions(self):
         """Allow any user to view posts, but require authentication to create."""
