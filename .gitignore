@@ -34,15 +34,26 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv/
+.virtualenv/
+virtualenv/
+.python-version
 
 # Django
 *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
 /media
 /static
 /staticfiles/
+staticfiles/
+media/
+celerybeat-schedule
+celerybeat-schedule.*
+celerybeat.pid
 
 # IDE
 .vscode/
@@ -64,6 +75,9 @@ htmlcov/
 # OS
 Thumbs.db
 .DS_Store
+.AppleDouble
+.LSOverride
+._*
 
 #files
 perf_test.md
@@ -73,3 +87,16 @@ gig_cover.html
 sample_delivery_report.html
 sample_build_plan.html
 launch_copy.md
+linkedin_profile.md
+x_header_chibuikem_3000x1000.png
+twitter_kit.md
+twitter_banner.html
+contra_profile.md
+linkedin_banner.html
+wellfound_profile.md
+indeed_glassdoor_kit.md
+internship_cover_letter.md
+cv_chibuikem_nwachukwu.html
+cold_email_playbook.md
+cold_email_targets.md
+linkedin_posts.md

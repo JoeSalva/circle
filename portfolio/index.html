@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chibuikem Nwachukwu · Backend Developer (Django / Python)</title>
+  <meta name="description" content="Backend developer building Django/DRF APIs that survive contact with production. Live Swagger docs, 47 passing tests, measurable performance work." />
+  <meta property="og:title" content="Chibuikem Nwachukwu · Backend Developer" />
+  <meta property="og:description" content="Django/DRF APIs with live Swagger docs, 47 passing tests, and a 63% query cut on the hottest endpoint." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230b0f0e'/%3E%3Ctext x='50' y='68' font-size='52' text-anchor='middle' fill='%2344b78b' font-family='monospace'%3EC%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">chibuikem<span class="brand-dot">.</span>dev</a>
+      <nav class="nav-links" aria-label="Main">
+        <a href="#projects">Projects</a>
+        <a href="#work">How I work</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn-small" href="https://salvagain.pythonanywhere.com/circle/schema/swagger-ui/" target="_blank" rel="noopener">Live API ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero wrap">
+      <p class="eyebrow reveal">Lagos, Nigeria · Backend Developer · Django / Python</p>
+      <h1 class="reveal">I build APIs that survive<br /><span class="accent">contact with production.</span></h1>
+      <p class="lede reveal">
+        I design and ship Django REST Framework backends with the boring parts done right:
+        object-level permissions, database-level constraints, graceful degradation,
+        and a test suite strangers can verify without me in the room.
+      </p>
+      <div class="hero-cta reveal">
+        <a class="btn" href="https://salvagain.pythonanywhere.com/circle/schema/swagger-ui/" target="_blank" rel="noopener">Run my API in your browser</a>
+        <a class="btn btn-ghost" href="https://github.com/JoeSalva/circle" target="_blank" rel="noopener">Read the source</a>
+      </div>
+
+      <dl class="stats reveal" aria-label="Project numbers">
+        <div class="stat"><dt>26</dt><dd>endpoints across 5 decoupled apps</dd></div>
+        <div class="stat"><dt>47</dt><dd>automated tests, all passing</dd></div>
+        <div class="stat"><dt>54 → 7</dt><dd>queries on the hottest endpoint</dd></div>
+        <div class="stat"><dt>4</dt><dd>deploy platforms survived</dd></div>
+      </dl>
+    </section>
+
+    <!-- ============ PROJECTS ============ -->
+    <section id="projects" class="section wrap">
+      <h2 class="section-title reveal">Projects</h2>
+
+      <article class="card reveal">
+        <div class="card-head">
+          <h3>Circle · Social Media REST API</h3>
+          <div class="card-links">
+            <a href="https://salvagain.pythonanywhere.com/circle/schema/swagger-ui/" target="_blank" rel="noopener">Live docs ↗</a>
+            <a href="https://github.com/JoeSalva/circle" target="_blank" rel="noopener">Source ↗</a>
+          </div>
+        </div>
+        <p>
+          A production-style social backend, not a tutorial: custom user model, JWT auth with
+          object-level permissions, posts, comments, likes, saves, follows, and profiles.
+          Every number below is verifiable by a stranger with a browser.
+        </p>
+        <ul class="tags">
+          <li>Django</li><li>DRF</li><li>PostgreSQL</li><li>Redis</li><li>Celery</li><li>SimpleJWT</li><li>drf-spectacular</li><li>django-silk</li>
+        </ul>
+        <ul class="facts">
+          <li><strong>Verifiable demo:</strong> public Swagger UI where anyone can sign up and run any endpoint live.</li>
+          <li><strong>Performance:</strong> cut the feed endpoint from 54 queries to 7 (281ms → 143ms) with select_related, annotated counts, and only().</li>
+          <li><strong>Data integrity:</strong> unique database constraints on likes, saves, and follows: race conditions become impossible, not merely discouraged.</li>
+          <li><strong>Resilience:</strong> settings degrade gracefully: Redis when present, fully functional without it.</li>
+        </ul>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-head">
+          <h3>Wayne Stitches · E-commerce, repo to revenue</h3>
+          <div class="card-links">
+            <span class="muted-note">deployed on Railway</span>
+          </div>
+        </div>
+        <p>
+          Took a client storefront from empty repository to v1 in six weeks: ten models,
+          real inventory, real payments. Audited checkout the way I would if my own salary
+          depended on it: two users, multiple browsers, expired sessions, double clicks,
+          empty stock, cancelled payments.
+        </p>
+        <ul class="tags">
+          <li>Django</li><li>Payments</li><li>Inventory</li><li>Railway</li>
+        </ul>
+        <ul class="facts">
+          <li><strong>Outcome:</strong> live and taking orders; three checkout bugs found and fixed before launch.</li>
+          <li><strong>Habit formed:</strong> failure tests first: expired tokens, races, empty states.</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ============ HOW I WORK ============ -->
+    <section id="work" class="section wrap">
+      <h2 class="section-title reveal">How I work</h2>
+      <p class="section-lede reveal">
+        Three war stories from shipping the thing above. Each one changed how I build.
+      </p>
+      <div class="grid-3">
+        <article class="mini reveal">
+          <h4>Measure first, fix second</h4>
+          <p>
+            My app "felt fine" while making 54 queries per page. Performance bugs hide until
+            real traffic shows up, and then your users are the load testers. Now I get counts
+            right on day one and let the database tell me the truth.
+          </p>
+        </article>
+        <article class="mini reveal">
+          <h4>Test in an environment that hates you</h4>
+          <p>
+            A cache line passed on my laptop and exploded on a clean machine, because
+            delete_pattern only exists on Redis-backed caches. The fix was a capability check,
+            not a try/except. Fallbacks are features; my settings now degrade on purpose.
+          </p>
+        </article>
+        <article class="mini reveal">
+          <h4>Constraints are law</h4>
+          <p>
+            Serializer validation is a polite suggestion. A check-then-create like toggle has a
+            race condition; two simultaneous requests ship a double like. UniqueConstraint in the
+            database makes that class of bug impossible instead of unlikely.
+          </p>
+        </article>
+      </div>
+      <p class="ai-note reveal">
+        <strong>On AI-assisted development:</strong> I use it for boilerplate, stack traces, and docs.
+        I verify everything it produces: my test suite is where the truth gets checked,
+        and tests don't care how confident generated code sounds.
+      </p>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section id="contact" class="section wrap contact">
+      <h2 class="section-title reveal">Let's talk</h2>
+      <p class="section-lede reveal">
+        I'm open to backend (Django/Python) roles, freelance API work, and paid trial tasks.
+        The fastest way to judge me is to click the live API and try to break it.
+      </p>
+      <div class="hero-cta reveal">
+        <button class="btn" id="copy-email" data-email="salvagainchibu@gmail.com">Copy my email</button>
+        <a class="btn btn-ghost" href="https://github.com/JoeSalva/" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/chibuikemnwachukwu/" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+      <p class="copy-hint reveal" id="copy-hint" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER (centered) ============ -->
+  <footer class="footer">
+    <p>© <span id="year">2026</span> Chibuikem Nwachukwu</p>
+    <p class="footer-sub">Plain HTML · no framework · no build step · deployed on Vercel</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
