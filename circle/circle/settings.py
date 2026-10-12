@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 import pathlib
 import os
+import sys
 import dj_database_url
 
 try:
@@ -152,6 +153,12 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Test runs only: the default PBKDF2 hasher is deliberately slow (~1M iterations),
+# which turns this auth-heavy suite into a multi-minute wait. Swap in a fast hasher
+# when the test runner is driving; production password hashing is unchanged.
+if 'test' in sys.argv:
+    PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 
 # Internationalization
